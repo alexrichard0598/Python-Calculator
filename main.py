@@ -9,6 +9,7 @@ string_display: str = "0"
 current_num: float = 0
 total: float = 0
 current_op: int = 0
+is_decimal = False
 
 
 class MainWindow(QtWidgets.QMainWindow, MainWin.Ui_MainWindow):
@@ -32,116 +33,87 @@ class MainWindow(QtWidgets.QMainWindow, MainWin.Ui_MainWindow):
         self.bttn_equl.clicked.connect(self.equals)
         self.bttn_multi.clicked.connect(self.multiply)
         self.bttn_divid.clicked.connect(self.divide)
+        self.bttn_decim.clicked.connect(self.decimal)
+        self.bttn_undo.clicked.connect(self.undo_number)
+        self.bttn_clr_entry.clicked.connect(self.clear_entry)
+        self.bttn_invert.clicked.connect(self.invert)
 
     def button_0_clicked(self):
         global string_display
         global float_display
         global current_op
-        if current_op == 5:
-            string_display = "0"
-            current_op = 0
-        string_display += "0"
-        float_display = float(string_display)
-        self.lbl_display.setText(str(float_display))
+        self.number(0)
 
     def button_1_clicked(self):
         global string_display
         global float_display
         global current_op
-        if current_op == 5:
-            string_display = "0"
-            current_op = 0
-        string_display += "1"
-        float_display = float(string_display)
-        self.lbl_display.setText(str(float_display))
+        self.number(1)
 
     def button_2_clicked(self):
         global string_display
         global float_display
         global current_op
-        if current_op == 5:
-            string_display = "0"
-            current_op = 0
-        string_display += "2"
-        float_display = float(string_display)
-        self.lbl_display.setText(str(float_display))
+        self.number(2)
 
     def button_3_clicked(self):
         global string_display
         global float_display
         global current_op
-        if current_op == 5:
-            string_display = "0"
-            current_op = 0
-        string_display += "3"
-        float_display = float(string_display)
-        self.lbl_display.setText(str(float_display))
+        self.number(3)
 
     def button_4_clicked(self):
         global string_display
         global float_display
         global current_op
-        if current_op == 5:
-            string_display = "0"
-            current_op = 0
-        string_display += "4"
-        float_display = float(string_display)
-        self.lbl_display.setText(str(float_display))
+        self.number(4)
 
     def button_5_clicked(self):
         global string_display
         global float_display
         global current_op
-        if current_op == 5:
-            string_display = "0"
-            current_op = 0
-        string_display += "5"
-        float_display = float(string_display)
-        self.lbl_display.setText(str(float_display))
+        self.number(5)
 
     def button_6_clicked(self):
         global string_display
         global float_display
         global current_op
-        if current_op == 5:
-            string_display = "0"
-            current_op = 0
-        string_display += "6"
-        float_display = float(string_display)
-        self.lbl_display.setText(str(float_display))
+        self.number(6)
 
     def button_7_clicked(self):
         global string_display
         global float_display
         global current_op
-        if current_op == 5:
-            string_display = "0"
-            current_op = 0
-        string_display += "7"
-        float_display = float(string_display)
-        self.lbl_display.setText(str(float_display))
+        self.number(7)
 
     def button_8_clicked(self):
         global string_display
         global float_display
         global current_op
-        if current_op == 5:
-            string_display = "0"
-            current_op = 0
-        string_display += "8"
-        float_display = float(string_display)
-        self.lbl_display.setText(str(float_display))
+        self.number(8)
 
     def button_9_clicked(self):
         global string_display
         global float_display
         global current_op
-        if current_op == 5:
-            string_display = "0"
-            current_op = 0
-        string_display += "9"
-        float_display = float(string_display)
-        self.lbl_display.setText(str(float_display))
+        self.number(9)
+
+    def decimal(self):
+        global string_display
+        global float_display
+        global current_op
+        global is_decimal
+        try:
+            if current_op == 5:
+                string_display = "0"
+                current_op = 0
+            if not is_decimal:
+                string_display += "."
+                float_display = float(string_display)
+                self.lbl_display.setText(str(string_display))
+                is_decimal = True
+        except Exception as Arg:
+            print(Arg)
 
     def clear(self):
         global string_display
@@ -149,12 +121,27 @@ class MainWindow(QtWidgets.QMainWindow, MainWin.Ui_MainWindow):
         global total
         global current_num
         global current_op
+        global is_decimal
         string_display = "0"
         float_display = 0.0
         current_num = 0.0
         total = 0.0
         current_op = 0
-        self.lbl_display.setText("0.0")
+        self.lbl_display.setText(str(float_display))
+        is_decimal = False
+
+    def clear_entry(self):
+        global string_display
+        global float_display
+        global current_op
+        global is_decimal
+        if current_op == 5:
+            self.clear()
+            return
+        string_display = "0"
+        float_display = 0.0
+        is_decimal = False
+        self.lbl_display.setText(str(float_display))
 
     def add(self):
         global string_display
@@ -212,10 +199,24 @@ class MainWindow(QtWidgets.QMainWindow, MainWin.Ui_MainWindow):
         string_display = str(float_display)
         self.lbl_display.setText(string_display)
 
+    def invert(self):
+        global string_display
+        global float_display
+        global total
+        try:
+            string_display = float_display * -1
+            float_display = float_display * -1
+            if current_op == 5:
+                total = total * -1
+            self.lbl_display.setText(str(float_display))
+        except Exception as Args:
+            print(Args)
+
     def calc(self):
         global current_num
         global total
         global current_op
+        global is_decimal
         try:
             current_num = float(self.lbl_display.text())
             if current_op == 1:
@@ -237,6 +238,10 @@ class MainWindow(QtWidgets.QMainWindow, MainWin.Ui_MainWindow):
                 return False
             else:
                 print("Current Operation Selector Error")
+            try:
+                int(string_display)
+            except TypeError:
+                is_decimal = True
         except ZeroDivisionError as Arg:
             print(Arg)
             self.lbl_display.setText("Divide by 0 Error:")
@@ -246,18 +251,32 @@ class MainWindow(QtWidgets.QMainWindow, MainWin.Ui_MainWindow):
             print(Arg)
             self.lbl_display.setText("Error!")
 
+    def number(self, number):
+        global string_display
+        global float_display
+        global current_op
+        try:
+            if current_op == 5:
+                string_display = "0"
+                current_op = 0
+            string_display += str(number)
+            float_display = float(string_display)
+            self.lbl_display.setText(str(float_display))
+        except Exception as Arg:
+            print(Arg)
+            self.lbl_display.setText("Error!")
+
     def undo_number(self):
         global string_display
         global float_display
-        print("Undo")
-        print("Str Display: " + string_display)
-        print("Float Display: " + str(float_display))
-        print("Str Display Length: " + str(len(string_display)))
-        string_display = (string_display[:len(string_display)-1])
-        print("Str Display: " + string_display)
-        float_display = float(string_display)
-        print("Float Display: " + str(float_display))
-        self.lbl_display.setText(str(float_display))
+        try:
+            string_display = (string_display[:len(string_display) - 1])
+            if string_display == "":
+                string_display = "0"
+            float_display = float(string_display)
+            self.lbl_display.setText(str(float_display))
+        except Exception as Arg:
+            print(Arg)
 
     def keyPressEvent(self, event):
         if event.key() == Key.Key_0:
@@ -291,7 +310,9 @@ class MainWindow(QtWidgets.QMainWindow, MainWin.Ui_MainWindow):
         if event.key() == Key.Key_Enter:
             self.bttn_equl.click()
         if event.key() == Key.Key_Backspace:
-            self.undo_number()
+            self.bttn_undo.click()
+        if event.key() == Key.Key_Period:
+            self.bttn_decim.click()
 
 
 def main():
